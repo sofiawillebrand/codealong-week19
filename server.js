@@ -52,6 +52,20 @@ app.get("/tasks", async (req, res) => {
   res.json(tasks);
 });
 
+app.post("/tasks", async (req, res) => {
+  const { text, complete } = req.body;
+
+  try {
+    const task = await new Task({ text, complete }).save();
+    res.status(201).json(task);
+  } catch (error) {
+    res.status(400).json({
+      message: "Could not save task to database",
+      error: error.errors,
+    });
+  }
+});
+
 // Start the server
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
